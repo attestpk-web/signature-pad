@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Signature Pad</title>
+
+    <!-- Signature Pad Library -->
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.5/dist/signature_pad.umd.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+        }
+        canvas {
+            border: 2px solid #000;
+            width: 100%;
+            height: 300px;
+        }
+        .btn {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<h2>Draw Your Signature</h2>
+
+<canvas id="signature-pad"></canvas>
+
+<br>
+
+<button id="clear" class="btn">Clear</button>
+<button id="save" class="btn">Download Signature</button>
+
+<script>
+    const canvas = document.getElementById("signature-pad");
+    const signaturePad = new SignaturePad(canvas);
+
+    // Resize canvas
+    function resize() {
+        const ratio = Math.max(window.devicePixelRatio || 1, 1);
+        canvas.width = canvas.offsetWidth * ratio;
+        canvas.height = canvas.offsetHeight * ratio;
+        canvas.getContext("2d").scale(ratio, ratio);
+    }
+    window.onresize = resize;
+    resize();
+
+    // Clear
+    document.getElementById("clear").onclick = function () {
+        signaturePad.clear();
+    };
+
+    // Save as image
+    document.getElementById("save").onclick = function () {
+        if (signaturePad.isEmpty()) {
+            alert("Please draw your signature first.");
+            return;
+        }
+        const dataURL = signaturePad.toDataURL();
+        const a = document.createElement('a');
+        a.href = dataURL;
+        a.download = "signature.png";
+        a.click();
+    };
+</script>
+
+</body>
+</html>
